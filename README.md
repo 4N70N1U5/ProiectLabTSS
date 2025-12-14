@@ -298,3 +298,43 @@ if (a == b & b == c) {
 ```
 
 În expresia de mai sus, `a == b` și `b == c` sunt expresii booleene fără efecte secundare. În Java, pentru operanzi booleeni, operatorii && și & au același rezultat logic, diferența fiind doar la nivel de strategie de evaluare (_short‑circuit_ vs evaluare completă). Deoarece evaluarea completă nu produce efecte secundare și nu poate genera overflow sau excepții, rezultatul expresiei este identic pentru orice combinație de valori (a, b, c). Prin urmare, programul mutant este comportamental identic cu programul original și reprezintă un mutant echivalent de ordinul 1.
+
+### Cerința 5: Crearea unui mutant non-echivalent care este omorât și a unuia care nu este omorât de către unul din testele de mai sus
+
+Vom alege testul EP4, care verifică clasificarea unui triunghi ca fiind echilateral pentru valorile (5, 5, 5).
+
+#### Mutant non-echivalent omorât
+
+Fișierul [TriangleClassifierKilledMutant.java](TriangleClassifier/src/main/java/org/antonionitoi/triangleclassifier/TriangleClassifierKilledMutant.java) conține o versiune modificată a clasei `TriangleClassifier`, în care am aplicat o mutație de tip _Literal Replacement_ (LR). Mutația constă în înlocuirea rezultatului returnat pentru triunghiurile echilaterale din `"EQUILATERAL"` în `"ISOSCELES"`.
+
+```java
+// Versiunea originală
+if (a == b && b == c) {
+    return "EQUILATERAL";
+}
+
+// Mutant non-echivalent omorât
+if (a == b && b == c) {
+    return "ISOSCELES";
+}
+```
+
+Această modificare face ca testul EP4 să eșueze, deoarece pentru intrarea (5, 5, 5), așteptarea este `"EQUILATERAL"`, dar mutantul returnează `"ISOSCELES"`. Astfel, acest mutant este omorât de testul EP4.
+
+#### Mutant non-echivalent supraviețuitor
+
+Fișierul [TriangleClassifierSurvivingMutant.java](TriangleClassifier/src/main/java/org/antonionitoi/triangleclassifier/TriangleClassifierSurvivingMutant.java) conține o versiune modificată a clasei `TriangleClassifier`, în care am aplicat o mutație de tip _Relational Operator Replacement_ (ROR). Mutația constă în înlocuirea unuia din operatorii `<=` cu `<` în decizia care verifică inegalitatea triunghiului.
+
+```java
+// Versiunea originală
+if (la + lb <= lc || la + lc <= lb || lb + lc <= la) {
+    return "INVALID";
+}
+
+// Mutant non-echivalent supraviețuitor
+if (la + lb < lc || la + lc <= lb || lb + lc <= la) {
+    return "INVALID";
+}
+```
+
+Această modificare face ca mutantul să accepte unele combinații de laturi care ar trebui să fie invalide conform specificației (de exemplu, (2, 3, 5) ar trebui să fie INVALID, dar mutantul o consideră ca fiind VALID). Cu toate acestea, testul ales pentru această cerință nu acoperă această situație. Prin urmare, acest mutant supraviețuiește testului EP4.
