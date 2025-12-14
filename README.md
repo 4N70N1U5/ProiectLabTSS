@@ -9,6 +9,8 @@
 ### Scop
 `TriangleClassifier` primește lungimile întregi ale celor trei laturi ale unui triunghi și întoarce tipul triunghiului folosind metoda publică `classify(int a, int b, int c)`.
 
+Această clasă este implementată în fișierul [TriangleClassifier.java](TriangleClassifier/src/main/java/org/antonionitoi/triangleclassifier/TriangleClassifier.java).
+
 ### Domeniul de intrare
 Valorile a, b și c, lungimile celor trei laturi ale triunghiului, numere întregi (Java `int`).
 
@@ -49,7 +51,7 @@ Partiționări identificate:
 | EP5             | Exact două laturi egale, triunghi valid          | ISOSCELES    | (5,5,7)               | "ISOSCELES"       |
 | EP6             | Toate laturile diferite și valide                | SCALENE      | (4,5,6)               | "SCALENE"         |
 
-Testele corespunzătoare se găsesc în `TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierEPTest.java` și includ câte o metodă JUnit pentru fiecare clasă de echivalență.
+Testele corespunzătoare se găsesc în fișierul [TriangleClassifierEPTest.java](TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierEPTest.java) care include câte o metodă JUnit pentru fiecare clasă de echivalență.
 
 Rularea testelor:
 ```bash
@@ -103,7 +105,7 @@ Tipul de date int are o limită superioară finită, Integer.MAX_VALUE. Nu exist
 | Integer.MAX_VALUE − 1 | imediat sub limită     | VALID             |
 | Integer.MAX_VALUE     | la limită              | VALID             |
 
-Testele corespunzătoare se găsesc în `TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierBVATest.java` și verifică explicit fiecare limită identificată mai sus.
+Testele corespunzătoare se găsesc în fișierul [TriangleClassifierBVATest.java](TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierBVATest.java) și verifică explicit fiecare limită identificată mai sus.
 
 Rularea testelor BVA:
 ```bash
@@ -158,7 +160,7 @@ Graful cauză-efect:
 | T  | T  | T  | T  | T  | T  | F  | F  | T  |    |    | X  |    |
 | T  | T  | T  | T  | T  | T  | F  | F  | F  |    |    |    | X  |
 
-Testele corespunzătoare se găsesc în `TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierCEGTest.java` și includ câte o metodă JUnit pentru fiecare combinație relevantă din tabelul de mai sus.
+Testele corespunzătoare se găsesc în fișierul [TriangleClassifierCEGTest.java](TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierCEGTest.java) care include câte o metodă JUnit pentru fiecare combinație relevantă din tabelul de mai sus.
 
 Rularea testelor CEG:
 ```bash
@@ -168,7 +170,7 @@ mvn test -Dtest=TriangleClassifierCEGTest
 
 ### Cerința 2: Stabilirea nivelului de acoperire a testelor de la Cerința 1
 
-Pentru fiecare set de teste (EP, BVA și CEG) s-a rulat `mvn clean test -Dtest=<TestClass>` cu pluginul JaCoCo. Rapoartele generate au fost mutate din `target/site/jacoco` în folderele `TriangleClassifier/coverage/ep`, `TriangleClassifier/coverage/bva` și `TriangleClassifier/coverage/ceg` pentru a nu fi ignorate de `.gitignore` și pentru a putea fi comparate.
+Pentru fiecare set de teste (EP, BVA și CEG) s-a rulat `mvn clean test -Dtest=<TestClass>` cu pluginul JaCoCo. Rapoartele generate au fost mutate din `target/site/jacoco` în folderele [coverage/ep](TriangleClassifier/coverage/ep), [coverage/bva](TriangleClassifier/coverage/bva) și [coverage/ceg](TriangleClassifier/coverage/ceg) pentru a nu fi ignorate de `.gitignore` și pentru a putea fi comparate.
 
 #### Rezultate Acoperire (JaCoCo)
 
@@ -269,7 +271,7 @@ Deciziile și condițiile atomice din graficul de control al fluxului (CFG) sunt
 
 #### Implementarea testelor MC/DC
 
-Testele corespunzătoare se găsesc în `TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierMCDCTest.java` și includ câte o metodă JUnit pentru fiecare test din tabelele de mai sus.
+Testele corespunzătoare se găsesc în fișierul [TriangleClassifierMCDCTest.java](TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierMCDCTest.java) care include câte o metodă JUnit pentru fiecare test din tabelele de mai sus, organizate în clase nested.
 
 Rularea testelor MC/DC:
 ```bash
