@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TriangleClassifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TriangleClassifier</a> &gt; <a href="index.source.html" class="el_package">org.antonionitoi.triangleclassifier</a> &gt; <span class="el_source">TriangleClassifier.java</span></div><h1>TriangleClassifier.java</h1><pre class="source lang-java linenums">package org.antonionitoi.triangleclassifier;
+
+/**
+ * TriangleClassifier
+ *
+ * Clasifică un triunghi pe baza lungimilor laturilor sale.
+ *
+ * Returnează una dintre valorile:
+ *  - &quot;INVALID&quot;
+ *  - &quot;EQUILATERAL&quot;
+ *  - &quot;ISOSCELES&quot;
+ *  - &quot;SCALENE&quot;
+ *
+ * Reguli:
+ *  - Toate laturile trebuie să fie strict pozitive.
+ *  - Inegalitățile triunghiului trebuie respectate.
+ */
+<span class="fc" id="L18">public class TriangleClassifier {</span>
+
+    /**
+     * Clasifică triunghiul definit de laturile a, b și c.
+     *
+     * @param a lungimea primei laturi
+     * @param b lungimea celei de-a doua laturi
+     * @param c lungimea celei de-a treia laturi
+     * @return tipul triunghiului
+     */
+    public static String classify(int a, int b, int c) {
+
+        // ===== Decizia D1: laturi pozitive =====
+<span class="fc bfc" id="L31" title="All 6 branches covered.">        if (a &lt;= 0 || b &lt;= 0 || c &lt;= 0) {</span>
+<span class="fc" id="L32">            return &quot;INVALID&quot;;</span>
+        }
+
+        // Convertim la long pentru a evita overflow la adunare
+<span class="fc" id="L36">        long la = a;</span>
+<span class="fc" id="L37">        long lb = b;</span>
+<span class="fc" id="L38">        long lc = c;</span>
+
+        // ===== Decizia D2: inegalitățile triunghiului =====
+<span class="fc bfc" id="L41" title="All 6 branches covered.">        if (la + lb &lt;= lc || la + lc &lt;= lb || lb + lc &lt;= la) {</span>
+<span class="fc" id="L42">            return &quot;INVALID&quot;;</span>
+        }
+
+        // ===== Decizia D3: toate laturile egale =====
+<span class="fc bfc" id="L46" title="All 4 branches covered.">        if (a == b &amp;&amp; b == c) {</span>
+<span class="fc" id="L47">            return &quot;EQUILATERAL&quot;;</span>
+        }
+
+        // ===== Decizia D4: două laturi egale =====
+<span class="fc bfc" id="L51" title="All 6 branches covered.">        if (a == b || a == c || b == c) {</span>
+<span class="fc" id="L52">            return &quot;ISOSCELES&quot;;</span>
+        }
+
+        // ===== Decizia D5: toate laturile diferite =====
+<span class="fc" id="L56">        return &quot;SCALENE&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

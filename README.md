@@ -165,3 +165,31 @@ Rularea testelor CEG:
 cd TriangleClassifier
 mvn test -Dtest=TriangleClassifierCEGTest
 ```
+
+### Cerința 2: Stabilirea nivelului de acoperire a testelor de la Cerința 1
+
+Pentru fiecare set de teste (EP, BVA și CEG) s-a rulat `mvn clean test -Dtest=<TestClass>` cu pluginul JaCoCo. Rapoartele generate au fost mutate din `target/site/jacoco` în folderele `TriangleClassifier/coverage/ep`, `TriangleClassifier/coverage/bva` și `TriangleClassifier/coverage/ceg` pentru a nu fi ignorate de `.gitignore` și pentru a putea fi comparate.
+
+#### Rezultate Acoperire (JaCoCo)
+
+| Set Teste                         | Instructions Covered | Branches Covered | Lines Covered | Complexity Covered |
+|-----------------------------------|----------------------|------------------|---------------|--------------------|
+| **EP** (Equivalence Partitioning) | 100% (61/61)         | 77% (17/22)      | 100% (13/13)  | 61% (8/13)         |
+| **BVA** (Boundary Value Analysis) | 86% (53/61)          | 54% (12/22)      | 92% (12/13)   | 38% (5/13)         |
+| **CEG** (Cause-Effect Graphing)   | 100% (61/61)         | 100% (22/22)     | 100% (13/13)  | 100% (13/13)       |
+
+#### Comentarii și Compararea Rezultatelor
+
+1.  **Equivalence Partitioning (EP)**:
+    - A obținut o acoperire bună, dar nu completă a ramurilor (77%).
+    - Deși a acoperit toate tipurile de rezultate (INVALID, EQUILATERAL, ISOSCELES, SCALENE), nu a explorat toate combinațiile de condiții din instrucțiunile `if` compuse (de exemplu, alegând câte un singur exemplu reprezentativ per clasă de echivalență, a testat doar o singură combinație de laturi pentru care inegalitatea triunghiului eșua).
+
+2.  **Boundary Value Analysis (BVA)**:
+    - A obținut cea mai mică acoperire (54% branches).
+    - Motivul este că setul de teste BVA s-a concentrat strict pe limitele identificate (0, 1, MAX_INT, limitele inegalității). Aceste limite au tins să producă rezultate `INVALID`, `EQUILATERAL` sau `ISOSCELES`, dar au omis cazul unui triunghi `SCALENE` valid (care se află "în interiorul" domeniului, nu la granițe). Acest lucru demonstrează că BVA singur poate fi insuficient dacă nu este combinat cu alte tehnici pentru a acoperi "interiorul" claselor de echivalență.
+
+3.  **Cause-Effect Graphing (CEG)**:
+    - A obținut acoperirea maximă posibilă pentru logica metodei (100% branches).
+    - Metoda a forțat analiza tuturor combinațiilor de cauze (condiții), asigurând că fiecare parte a expresiilor booleene complexe a fost evaluată. De exemplu, a generat teste specifice pentru fiecare pereche de laturi care încalcă inegalitatea triunghiului și pentru fiecare pereche de laturi egale.
+
+**Concluzie:** Pentru acest program, **Cause-Effect Graphing** s-a dovedit a fi cea mai robustă tehnică, generând un set de teste care a exercitat complet logica decizională a programului.
