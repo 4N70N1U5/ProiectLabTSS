@@ -276,3 +276,23 @@ Rularea testelor MC/DC:
 cd TriangleClassifier
 mvn test -Dtest=TriangleClassifierMCDCTest
 ```
+
+### Cerința 4: Crearea unui mutant echivalent de ordinul 1 al programului
+
+Fișierul [TriangleClassifierEquivalentMutant.java](TriangleClassifier/src/main/java/org/antonionitoi/triangleclassifier/TriangleClassifierEquivalentMutant.java) conține o versiune modificată a clasei `TriangleClassifier`.
+
+Pentru a ilustra conceptul de mutant echivalent, am creat o versiune modificată a metodei classify, în care am aplicat o singură mutație de tip _Logical Operator Replacement_ (LOR). Mutația constă în înlocuirea operatorului `&&` cu `&` în decizia care verifică dacă triunghiul este echilateral.
+
+```java
+// Versiunea originală
+if (a == b && b == c) {
+    return "EQUILATERAL";
+}
+
+// Mutant echivalent de ordinul 1
+if (a == b & b == c) {
+    return "EQUILATERAL";
+}
+```
+
+În expresia de mai sus, `a == b` și `b == c` sunt expresii booleene fără efecte secundare. În Java, pentru operanzi booleeni, operatorii && și & au același rezultat logic, diferența fiind doar la nivel de strategie de evaluare (_short‑circuit_ vs evaluare completă). Deoarece evaluarea completă nu produce efecte secundare și nu poate genera overflow sau excepții, rezultatul expresiei este identic pentru orice combinație de valori (a, b, c). Prin urmare, programul mutant este comportamental identic cu programul original și reprezintă un mutant echivalent de ordinul 1.
