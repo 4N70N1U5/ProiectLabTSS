@@ -193,3 +193,86 @@ Pentru fiecare set de teste (EP, BVA și CEG) s-a rulat `mvn clean test -Dtest=<
     - Metoda a forțat analiza tuturor combinațiilor de cauze (condiții), asigurând că fiecare parte a expresiilor booleene complexe a fost evaluată. De exemplu, a generat teste specifice pentru fiecare pereche de laturi care încalcă inegalitatea triunghiului și pentru fiecare pereche de laturi egale.
 
 **Concluzie:** Pentru acest program, **Cause-Effect Graphing** s-a dovedit a fi cea mai robustă tehnică, generând un set de teste care a exercitat complet logica decizională a programului.
+
+### Cerința 3: Transformarea programului într-un graf orientat și găsirea unui set de teste care satisface criteriul MC/DC
+
+#### Transformarea în Graf Orientat
+
+Nodurile grafului reprezintă punctele de decizie și acțiunile din cod, iar muchiile reprezintă tranzițiile bazate pe condițiile evaluate.
+
+![Triangle Classifier CFG.png](Triangle%20Classifier%20CFG.png)
+
+#### Ce presupune MC/DC
+
+Pentru fiecare decizie compusă, MC/DC cere:
+- să existe perechi de teste în care:
+  - o singură condiție atomică își schimbă valoarea (de la true la false sau invers),
+  - iar rezultatul deciziei (true/false) se schimbă și el,
+  - toate celelalte condiții din decizie rămân la fel.
+
+#### Identificarea deciziilor și a condițiilor atomice
+
+Deciziile și condițiile atomice din graficul de control al fluxului (CFG) sunt:
+
+- **D1**: a <= 0 || b <= 0 || c <= 0
+  - **C1**: a <= 0
+  - **C2**: b <= 0
+  - **C3**: c <= 0
+- **D2**: a + b <= c || a + c <= b || b + c <= a
+  - **C4**: a + b <= c
+  - **C5**: a + c <= b
+  - **C6**: b + c <= a
+- **D3**: a == b && b == c
+  - **C7**: a == b
+  - **C8**: b == c
+- **D4**: a == b || b == c || a == c
+  - **C7**: a == b
+  - **C8**: b == c
+  - **C9**: a == c
+
+#### Setul de teste MC/DC
+
+##### Teste pentru D1
+
+| Test Case | a      | b      | c      | C1    | C2    | C3    | D1 Result | Expected Output | Explicație MC/DC           |
+|-----------|--------|--------|--------|-------|-------|-------|-----------|-----------------|----------------------------|
+| D1-T1     | 3      | 4      | 5      | F     | F     | F     | F         | VALID           | Toate condițiile false     |
+| D1-T2     | **-3** | 4      | 5      | **T** | F     | F     | **T**     | INVALID         | C1 schimbă D1 de la F la T |
+| D1-T3     | 3      | **-4** | 5      | F     | **T** | F     | **T**     | INVALID         | C2 schimbă D1 de la F la T |
+| D1-T4     | 3      | 4      | **-5** | F     | F     | **T** | **T**     | INVALID         | C3 schimbă D1 de la F la T |
+
+##### Teste pentru D2
+
+| Test Case | a      | b      | c      | C4    | C5    | C6    | D2 Result | Expected Output | Explicație MC/DC           |
+|-----------|--------|--------|--------|-------|-------|-------|-----------|-----------------|----------------------------|
+| D2-T1     | 3      | 4      | 5      | F     | F     | F     | F         | VALID           | Toate condițiile false     |
+| D2-T2     | 3      | 4      | **10** | **T** | F     | F     | **T**     | INVALID         | C4 schimbă D2 de la F la T |
+| D2-T3     | 3      | **10** | 5      | F     | **T** | F     | **T**     | INVALID         | C5 schimbă D2 de la F la T |
+| D2-T4     | **10** | 4      | 5      | F     | F     | **T** | **T**     | INVALID         | C6 schimbă D2 de la F la T |
+
+##### Teste pentru D3
+
+| Test Case | a     | b | c     | C7    | C8    | D3 Result | Expected Output | Explicație MC/DC           |
+|-----------|-------|---|-------|-------|-------|-----------|-----------------|----------------------------|
+| D3-T1     | 5     | 5 | 5     | T     | T     | T         | EQUILATERAL     | Toate condițiile true      |
+| D3-T2     | **6** | 5 | 5     | **F** | T     | **F**     | ISOSCELES       | C7 schimbă D3 de la T la F |
+| D3-T3     | 5     | 5 | **6** | T     | **F** | **F**     | ISOSCELES       | C8 schimbă D3 de la T la F |
+
+##### Teste pentru D4
+
+| Test Case | a     | b     | c     | C7    | C8    | C9    | D4 Result | Expected Output | Explicație MC/DC           |
+|-----------|-------|-------|-------|-------|-------|-------|-----------|-----------------|----------------------------|
+| D4-T1     | 5     | 6     | 7     | F     | F     | F     | F         | SCALENE         | Toate condițiile false     |
+| D4-T2     | **6** | 6     | 7     | **T** | F     | F     | **T**     | ISOSCELES       | C7 schimbă D4 de la F la T |
+| D4-T3     | 5     | **7** | 7     | F     | **T** | F     | **T**     | ISOSCELES       | C8 schimbă D4 de la F la T |
+| D4-T4     | 5     | 6     | **5** | F     | F     | **T** | **T**     | ISOSCELES       | C9 schimbă D4 de la F la T |
+
+#### Implementarea testelor MC/DC
+
+Testele corespunzătoare se găsesc în `TriangleClassifier/src/test/java/org/antonionitoi/triangleclassifier/TriangleClassifierMCDCTest.java` și includ câte o metodă JUnit pentru fiecare test din tabelele de mai sus.
+
+Rularea testelor MC/DC:
+```bash
+cd TriangleClassifier
+mvn test -Dtest=TriangleClassifierMCDCTest
+```
